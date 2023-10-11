@@ -10,6 +10,14 @@ app.secret_key = os.getenv('SECRET_KEY')
 DATABASE_URL = os.getenv('DATABASE_URL')
 conn = psycopg2.connect(DATABASE_URL)
 
+
+cur = conn.cursor()
+cur.execute("CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);")
+cur.execute("INSERT INTO test (num, data) VALUES (%s, %s)", (100, "abc'def"))
+cur.execute("SELECT * FROM test;")
+
+
+
 @app.route('/')
 def main():
-    return render_template('index.html')
+    return cur.fetchone()
