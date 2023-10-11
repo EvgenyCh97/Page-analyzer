@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, render_template
 
 load_dotenv()
 
@@ -9,4 +9,4 @@ app.secret_key = os.getenv('SECRET_KEY')
 
 @app.route('/')
 def main():
-    return 'Hello, World!'
+    return render_template('index.html')
