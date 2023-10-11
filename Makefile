@@ -7,13 +7,13 @@ package-install:
 lint:
 	poetry run flake8 gendiff tests
 
-build: check
+build_package: check
 	poetry build
 
-reinstall: build package-install
+reinstall: build_package package-install
 	pip install --user dist/*.whl --force-reinstall
 
-full-reinstall: build package-install reinstall
+full-reinstall: build_package package-install reinstall
 
 test-coverage:
 	poetry run pytest --cov=gendiff tests/ --cov-report xml tests
@@ -24,5 +24,8 @@ dev:
 PORT ?= 8000
 start:
 	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
+
+build:
+	./build.sh
 
 .PHONY: install test lint selfcheck check build
