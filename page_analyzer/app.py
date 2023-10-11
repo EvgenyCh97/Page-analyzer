@@ -20,4 +20,4 @@ cur.execute("SELECT * FROM test;")
 
 @app.route('/')
 def main():
-    return cur.fetchone()
+    return str(cur.fetchone())
