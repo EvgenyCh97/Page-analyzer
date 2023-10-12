@@ -14,26 +14,26 @@
       </nav>
     </header>
     <main>
-      <div class="conrainer">
+      <div class="container-lg mt-3">
         <h1>Сайты</h1>
-        <div class="table">
-          <table data-test="urls">
-            <th>
-              <tr>
-                  <td>ID</td>
-                  <td>Имя</td>
-                  <td>Последняя проверка</td>
-                  <td>Код ответа</td>
-              </tr>
-            </th>
+        <div class="table-responsive">
+          <table data-test="urls" class="table table-bordered table-hover text-nowrap">
+            <thead>
+              <td>ID</td>
+              <td>Имя</td>
+              <td>Последняя проверка</td>
+              <td>Код ответа</td>
+            </thead>
+            <tbody>
             {% for site in sites %}
-            <tr>
-                <td>{{ site.id }}</td>
-                <td><a href="{{ url_for('get_site', id=site.id) }}">{{ site.name }}</a></td>
-                <td>--</td>
-                <td>--</td>
-            </tr>
+              <tr>
+                  <td>{{ site.id }}</td>
+                  <td><a href="{{ url_for('get_site', id=site.id) }}">{{ site.name }}</a></td>
+                  <td>--</td>
+                  <td>--</td>
+              </tr>
             {% endfor %}
+            </tbody>
           </table>
         </div>
       </div>
