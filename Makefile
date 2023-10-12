@@ -28,4 +28,7 @@ start:
 build:
 	./build.sh
 
+make db_conenct:
+	PGPASSWORD=In3nqr68N1Mit7NYy9gWpDJcV4Ewxvrt psql -h dpg-ckj9s18lk5ic73di4amg-a.oregon-postgres.render.com -U page_analyzer_hfq0_user page_analyzer_hfq0
+
 .PHONY: install test lint selfcheck check build
