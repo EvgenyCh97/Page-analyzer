@@ -4,8 +4,16 @@ install:
 package-install:
 	python3 -m pip install --user dist/*.whl
 
+selfcheck:
+	poetry check
+
+test:
+	poetry run pytest
+
 lint:
-	poetry run flake8 gendiff tests
+	poetry run flake8 page_analyzer tests
+
+check: selfcheck test lint
 
 build_package: check
 	poetry build
@@ -16,7 +24,7 @@ reinstall: build_package package-install
 full-reinstall: build_package package-install reinstall
 
 test-coverage:
-	poetry run pytest --cov=gendiff tests/ --cov-report xml tests
+	poetry run pytest --cov=page_analyzer tests/ --cov-report xml tests
 
 dev:
 	poetry run flask --app page_analyzer:app --debug run
