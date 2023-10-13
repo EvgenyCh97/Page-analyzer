@@ -27,10 +27,10 @@
             <tbody>
             {% for site in sites %}
               <tr>
-                  <td>{{ site.id }}</td>
-                  <td><a href="{{ url_for('get_site', id=site.id) }}">{{ site.name }}</a></td>
-                  <td>{% if site.created_at %}{{ site.created_at }}{% endif %}</td>
-                  <td>{% if site.status_code %}{{ site.status_code }}{% endif %}</td>
+                <td>{{ site.id }}</td>
+                <td><a href="{{ url_for('get_site', id=site.id) }}">{{ site.name }}</a></td>
+                <td>{% if site.created_at %}{{ site.created_at }}{% endif %}</td>
+                <td>{% if site.status_code %}{{ site.status_code }}{% endif %}</td>
               </tr>
             {% endfor %}
             </tbody>

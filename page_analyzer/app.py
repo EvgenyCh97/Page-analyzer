@@ -7,6 +7,7 @@ from flask import Flask, render_template, request, redirect, url_for, get_flashe
 import validators
 from urllib.parse import urlparse
 from datetime import date
+from bs4 import BeautifulSoup
 
 load_dotenv()
 
@@ -95,10 +96,19 @@ def get_check(id):
                 flash('Произошла ошибка при проверке', 'danger')
             else:
                 status_code = r.status_code
+                soup = BeautifulSoup(r.text, 'html.parser')
+                title = soup.select_one('title')
+                h1 = soup.select_one('h1')
+                description = soup.select_one('meta[name="description"]')
                 cursor.execute(
-                    'INSERT INTO url_checks (url_id, status_code, created_at) '
-                    'VALUES (%s, %s, %s)',
-                    (url_id, status_code, current_date))
+                    'INSERT INTO url_checks '
+                    '(url_id, status_code, h1, title, description, created_at) '
+                    'VALUES (%s, %s, %s, %s, %s, %s)',
+                    (url_id, status_code,
+                     h1.string if h1 else None,
+                     title.string if title else None,
+                     description['content'] if description else None,
+                     current_date))
                 connection.commit()
                 flash('Страница успешно проверена', 'success')
     return redirect(url_for('get_site', id=id), code=302)
