@@ -13,10 +13,14 @@
         <div><a class="navbar-nav nav-link" href="{{ url_for('get_urls') }}">Сайты</a></div>
       </nav>
     </header>
-    {% if error %}
-      <div class="alert alert-danger" role="alert">
-        {{ error }}
+    {% if messages %}
+    <div class="flashes">
+      {% for category, message in messages %}
+      <div class="alert alert-{{ category }}" role="alert">
+        {{ message }}
       </div>
+      {% endfor %}
+    </div>
     {% endif %}
     <main>
       <h1></h1>

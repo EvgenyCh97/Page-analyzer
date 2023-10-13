@@ -17,7 +17,8 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 
 @app.route('/')
 def get_main_page():
-    return render_template('main.html')
+    messages = get_flashed_messages(with_categories=True)
+    return render_template('main.html', messages=messages)
 
 
 @app.route('/urls', methods=['POST'])
@@ -25,9 +26,11 @@ def check_site():
     url = request.form.get('url')
 
     if not url:
-        return render_template('main.html', error='URL обязателен'), 422
+        flash('URL обязателен', 'danger')
+        return redirect(url_for('get_main_page'))
     if not validators.url(url):
-        return render_template('main.html', error='Некорректный URL'), 422
+        flash('Некорректный URL', 'danger')
+        return redirect(url_for('get_main_page'))
 
     name = (urlparse(url)[0] + '://' + urlparse(url)[1]).lower()
     with psycopg2.connect(DATABASE_URL) as connection:
