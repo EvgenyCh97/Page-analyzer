@@ -1,3 +1,4 @@
+import requests
 import psycopg2
 import psycopg2.extras
 import os
@@ -84,11 +85,19 @@ def get_check(id):
         with connection.cursor(
                 cursor_factory=psycopg2.extras.DictCursor) as cursor:
             current_date = date.today().isoformat()
-            cursor.execute(
-                'INSERT INTO url_checks (url_id, created_at) VALUES (%s, %s)',
-                (url_id, current_date))
-            connection.commit()
-            flash('Страница успешно проверена', 'success')
+            try:
+                r = requests.get(site['name'])
+                r.raise_for_status()
+            except:
+                flash('Произошла ошибка при проверке', 'danger')
+            else:
+                status_code = r.status_code
+                cursor.execute(
+                    'INSERT INTO url_checks (url_id, status_code, created_at) '
+                    'VALUES (%s, %s, %s)',
+                    (url_id, status_code, current_date))
+                connection.commit()
+                flash('Страница успешно проверена', 'success')
     return redirect(url_for('get_site', id=id), code=302)
 
 
