@@ -19,18 +19,18 @@
         <div class="table-responsive">
           <table data-test="urls" class="table table-bordered table-hover text-nowrap">
             <thead>
-              <td>ID</td>
-              <td>Имя</td>
-              <td>Последняя проверка</td>
-              <td>Код ответа</td>
+              <th>ID</th>
+              <th>Имя</th>
+              <th>Последняя проверка</th>
+              <th>Код ответа</th>
             </thead>
             <tbody>
             {% for site in sites %}
               <tr>
                   <td>{{ site.id }}</td>
                   <td><a href="{{ url_for('get_site', id=site.id) }}">{{ site.name }}</a></td>
-                  <td>--</td>
-                  <td>--</td>
+                  <td>{% if site.created_at %}{{ site.created_at }}{% endif %}</td>
+                  <td>{% if site.status_code %}{{ site.status_code }}{% endif %}</td>
               </tr>
             {% endfor %}
             </tbody>
