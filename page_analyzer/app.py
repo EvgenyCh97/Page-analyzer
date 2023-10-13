@@ -1,13 +1,15 @@
-import requests
+import os
+from datetime import date
+from urllib.parse import urlparse
+
 import psycopg2
 import psycopg2.extras
-import os
-from dotenv import load_dotenv
-from flask import Flask, render_template, request, redirect, url_for, get_flashed_messages, flash
+import requests
 import validators
-from urllib.parse import urlparse
-from datetime import date
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
+from flask import (Flask, flash, get_flashed_messages, redirect,
+                   render_template, request, url_for)
 
 load_dotenv()
 
@@ -92,7 +94,7 @@ def get_check(id):
             try:
                 r = requests.get(site['name'])
                 r.raise_for_status()
-            except:
+            except requests.exceptions.ConnectionError:
                 flash('Произошла ошибка при проверке', 'danger')
             else:
                 status_code = r.status_code
@@ -102,8 +104,8 @@ def get_check(id):
                 description = soup.select_one('meta[name="description"]')
                 cursor.execute(
                     'INSERT INTO url_checks '
-                    '(url_id, status_code, h1, title, description, created_at) '
-                    'VALUES (%s, %s, %s, %s, %s, %s)',
+                    '(url_id, status_code, h1, title, description, created_at)'
+                    ' VALUES (%s, %s, %s, %s, %s, %s)',
                     (url_id, status_code,
                      h1.string if h1 else None,
                      title.string if title else None,
