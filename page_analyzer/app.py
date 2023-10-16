@@ -56,7 +56,7 @@ def check_site():
     return redirect(url_for('get_site', id=id), code=302)
 
 
-@app.route('/urls/<id>')
+@app.route('/urls/<int:id>')
 def get_site(id):
     messages = get_flashed_messages(with_categories=True)
     site = get_site_from_db(id)
@@ -85,7 +85,7 @@ def get_urls():
     return render_template('index.html', sites=sites)
 
 
-@app.route('/urls/<id>/checks', methods=['POST'])
+@app.route('/urls/<int:id>/checks', methods=['POST'])
 def get_check(id):
     site = get_site_from_db(id)
     url_id = site['id']
