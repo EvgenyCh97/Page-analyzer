@@ -30,10 +30,10 @@ def check_site():
 
     if not url:
         flash('URL обязателен', 'danger')
-        return redirect(url_for('get_main_page'))
+        return redirect(url_for('get_main_page'), code=422)
     if not validators.url(url):
         flash('Некорректный URL', 'danger')
-        return redirect(url_for('get_main_page'))
+        return redirect(url_for('get_main_page'), code=422)
 
     name = (urlparse(url)[0] + '://' + urlparse(url)[1]).lower()
     with psycopg2.connect(DATABASE_URL) as connection:
