@@ -96,7 +96,7 @@ def get_check(id):
             try:
                 r = requests.get(site['name'])
                 r.raise_for_status()
-            except requests.exceptions.ConnectionError:
+            except requests.exceptions.RequestException:
                 flash('Произошла ошибка при проверке', 'danger')
             else:
                 status_code = r.status_code
