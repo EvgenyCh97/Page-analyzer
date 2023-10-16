@@ -30,10 +30,12 @@ def check_site():
 
     if not url:
         flash('URL обязателен', 'danger')
-        return redirect(url_for('get_main_page'), code=422)
+        messages = get_flashed_messages(with_categories=True)
+        return render_template('main.html', messages=messages), 422
     if not validators.url(url):
         flash('Некорректный URL', 'danger')
-        return redirect(url_for('get_main_page'), code=422)
+        messages = get_flashed_messages(with_categories=True)
+        return render_template('main.html', messages=messages), 422
 
     name = (urlparse(url)[0] + '://' + urlparse(url)[1]).lower()
     with psycopg2.connect(DATABASE_URL) as connection:
