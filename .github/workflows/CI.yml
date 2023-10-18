@@ -14,11 +14,11 @@ jobs:
           pip install poetry
           make install
       - name: Run server
-          run: |
-            make start
+        run: |
+          make start
       - name: Run test and linter
-          run: |
-            make check
+        run: |
+          make check
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v3.2.0
         if: github.ref_name == 'main'
