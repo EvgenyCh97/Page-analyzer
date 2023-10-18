@@ -13,14 +13,16 @@ jobs:
         run: |
           pip install poetry
           make install
-  dev_server: build
+  dev_server:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Run dev server
         run: |
           make dev
-  test: build
+  test:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
