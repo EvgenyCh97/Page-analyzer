@@ -13,22 +13,12 @@ jobs:
         run: |
           pip install poetry
           make install
-  dev_server:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run dev server
-        run: |
-          make dev
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run dev server, linter and pytest
-        run: |
-          make check
+      - name: Run server
+          run: |
+            make start
+      - name: Run test and linter
+          run: |
+            make check
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v3.2.0
         if: github.ref_name == 'main'

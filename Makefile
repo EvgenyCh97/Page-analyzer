@@ -7,7 +7,7 @@ package-install:
 selfcheck:
 	poetry check
 
-test: dev
+test:
 	poetry run pytest
 
 lint:
