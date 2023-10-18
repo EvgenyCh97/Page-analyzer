@@ -5,16 +5,24 @@ on:
   - pull_request
 
 jobs:
-  dev-server:
-    runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-        - name: Run dev server
-          run: |
-            pip install poetry
-            make install
-            make dev
   build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          pip install poetry
+          make install
+  dev-server: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run dev server
+        run: |
+          pip install poetry
+          make install
+          make dev
+  test: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
