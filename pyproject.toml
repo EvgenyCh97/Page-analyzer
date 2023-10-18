@@ -5,6 +5,13 @@ description = "Page analyzer"
 authors = ["Evgenij Chajka <chay67ka26@gmail.com>"]
 readme = "README.md"
 packages = [{include = "page_analyzer"}]
+classifiers = [
+    "Programming Language :: Python",
+    "Framework :: Flask",
+    "Topic :: Internet :: WWW/HTTP :: Site Management",
+    "Topic :: Database"
+]
+repository = "https://github.com/EvgenyCh97/Page-analyzer"
 
 [tool.poetry.dependencies]
 python = "^3.8.10"
