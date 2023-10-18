@@ -63,7 +63,7 @@ def test_get_main_page(client):
 
 
 def test_check_site(page: Page):
-    page.goto('http://127.0.0.1:8001/')
+    page.goto('http://127.0.0.0:8001/')
     page.get_by_placeholder("https://www.example.com"). \
         fill("")
     page.locator('input[type="submit"]').click()
@@ -74,13 +74,13 @@ def test_check_site(page: Page):
     page.locator('input[type="submit"]').click()
     expect(page.get_by_text("Некорректный URL")).to_be_visible()
 
-    page.goto('http://127.0.0.1:8001/')
+    page.goto('http://127.0.0.0:8001/')
     page.get_by_placeholder("https://www.example.com"). \
         fill("https://test.com")
     page.locator('input[type="submit"]').click()
     expect(page.get_by_text("Страница успешно добавлена")).to_be_visible()
 
-    page.goto('http://127.0.0.1:8001/')
+    page.goto('http://127.0.0.0:8001/')
     page.get_by_placeholder("https://www.example.com"). \
         fill("https://TEST.com")
     page.locator('input[type="submit"]').click()
@@ -94,20 +94,20 @@ def test_check_site(page: Page):
 
 
 def test_get_urls(page: Page):
-    page.goto('http://127.0.0.1:8001/urls')
+    page.goto('http://127.0.0.0:8001/urls')
     expect(page.get_by_role("heading", name="Сайты")).to_be_visible()
     expect(page.get_by_role("table", name='')).to_be_visible()
 
 
 def test_get_check(page: Page):
-    page.goto('http://127.0.0.1:8001/')
+    page.goto('http://127.0.0.0:8001/')
     page.get_by_placeholder("https://www.example.com"). \
         fill("https://aaa.ru")
     page.locator('input[type="submit"]').click()
     page.locator('text=Запустить проверку').click()
     expect(page.get_by_text("Страница успешно проверена")).to_be_visible()
 
-    page.goto('http://127.0.0.1:8001/')
+    page.goto('http://127.0.0.0:8001/')
     page.get_by_placeholder("https://www.example.com"). \
         fill("https://ccc.com")
     page.locator('input[type="submit"]').click()
