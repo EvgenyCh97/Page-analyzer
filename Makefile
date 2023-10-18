@@ -27,7 +27,7 @@ test-coverage:
 	poetry run pytest --cov=page_analyzer tests/ --cov-report xml tests
 
 dev:
-	poetry run flask --app page_analyzer:app --debug run || true
+	poetry run flask --app page_analyzer:app --debug run
 
 PORT ?= 8001
 start:
