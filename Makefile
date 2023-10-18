@@ -7,7 +7,7 @@ package-install:
 selfcheck:
 	poetry check
 
-test:
+test: dev
 	poetry run pytest
 
 lint:
@@ -27,7 +27,7 @@ test-coverage:
 	poetry run pytest --cov=page_analyzer tests/ --cov-report xml tests
 
 dev:
-	poetry run flask --app page_analyzer:app --debug run
+	poetry run flask --app page_analyzer:app --debug run || true
 
 PORT ?= 8001
 start:
