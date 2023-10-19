@@ -1,81 +1,57 @@
-<!doctype html>
-<html lang="ru">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Анализатор страниц</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  </head>
-  <body class="min-vh-100 d-flex flex-column">
-    <header class="header" style="background-color: #212529">
-      <nav class="navbar navbar-expand-md navbar-dark px-3">
-        <a class="navbar-brand" href="{{ url_for('get_main_page') }}">Анализатор страниц</a>
-        <div><a class="navbar-nav nav-link" href="{{ url_for('get_urls') }}">Сайты</a></div>
-      </nav>
-    </header>
-    {% if messages %}
-    <div class="flashes">
-      {% for category, message in messages %}
-      <div class="alert alert-{{ category }}" role="alert">
-        {{ message }}
-      </div>
+{% extends 'layouts/layout.html' %}
+
+{% block content %}
+
+<div class="container-lg mt-3">
+  <h1>Сайт: {{ url.name }}</h1>
+  <div class="table-responsive">
+    <table data-test="url" class="table table-bordered table-hover text-nowrap">
+      <tbody>
+      <tr>
+        <td>ID</td>
+        <td>{{ url.id }}</td>
+      </tr>
+      <tr>
+        <td>Имя</td>
+        <td>{{ url.name }}</td>
+      </tr>
+      <tr>
+        <td>Дата создания</td>
+        <td>{{ url.created_at }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <h2 class="mt-5 mb-3">Проверки</h2>
+  <form method="post" action="{{ url_for('run_check', id=url.id) }}">
+    <input type="submit" class="btn btn-primary" value="Запустить проверку">
+  </form>
+  <div>
+    <table class="align-middle text-center table table-bordered table-hover mt-2" data-test="checks">
+      <thead>
+        <tr class="align-middle">
+          <th>ID</th>
+          <th>Код ответа</th>
+          <th>h1</th>
+          <th>title</th>
+          <th>description</th>
+          <th>Дата создания</th> 
+        </tr>
+      </thead>
+      <tbody>
+      {% for check in checks %}
+        <tr>
+          <td>{{ check.id }}</td>
+          <td>{{ check.status_code }}</a></td>
+          <td>{% if check.h1 %}{{ check.h1 }}{% endif %}</td>
+          <td>{% if check.title %}{{ check.title }}{% endif %}</td>
+          <td>{% if check.description %}{{ check.description }}{% endif %}</td>
+          <td>{{ check.created_at }}</td>
+        </tr>
       {% endfor %}
-    </div>
-    {% endif %}
-    <main>
-      <div class="container-lg mt-3">
-        <h1>Сайт: {{ url.name }}</h1>
-        <div class="table-responsive">
-          <table data-test="url" class="table table-bordered table-hover text-nowrap">
-            <tbody>
-            <tr>
-              <td>ID</td>
-              <td>{{ url.id }}</td>
-            </tr>
-            <tr>
-              <td>Имя</td>
-              <td>{{ url.name }}</td>
-            </tr>
-            <tr>
-              <td>Дата создания</td>
-              <td>{{ url.created_at }}</td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-        <h2 class="mt-5 mb-3">Проверки</h2>
-        <form method="post" action="{{ url_for('run_check', id=url.id) }}">
-          <input type="submit" class="btn btn-primary" value="Запустить проверку">
-        </form>
-        <div>
-          <table class="table table-bordered table-hover mt-2" data-test="checks">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Код ответа</th>
-                <th>h1</th>
-                <th>title</th>
-                <th>description</th>
-                <th>Дата создания</th> 
-              </tr>
-            </thead>
-            <tbody>
-            {% for check in checks %}
-              <tr>
-                <td>{{ check.id }}</td>
-                <td>{{ check.status_code }}</a></td>
-                <td>{% if check.h1 %}{{ check.h1 }}{% endif %}</td>
-                <td>{% if check.title %}{{ check.title }}{% endif %}</td>
-                <td>{% if check.description %}{{ check.description }}{% endif %}</td>
-                <td>{{ check.created_at }}</td>
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </main>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-  </body>
-</html>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
