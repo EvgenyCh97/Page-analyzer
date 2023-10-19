@@ -25,12 +25,12 @@
               <th>Код ответа</th>
             </thead>
             <tbody>
-            {% for site in sites %}
+            {% for url in urls %}
               <tr>
-                <td>{{ site.id }}</td>
-                <td><a href="{{ url_for('get_site', id=site.id) }}">{{ site.name }}</a></td>
-                <td>{% if site.created_at %}{{ site.created_at }}{% endif %}</td>
-                <td>{% if site.status_code %}{{ site.status_code }}{% endif %}</td>
+                <td>{{ url.id }}</td>
+                <td><a href="{{ url_for('get_url', id=url.id) }}">{{ url.name }}</a></td>
+                <td>{% if url.created_at %}{{ url.created_at }}{% endif %}</td>
+                <td>{% if url.status_code %}{{ url.status_code }}{% endif %}</td>
               </tr>
             {% endfor %}
             </tbody>

@@ -24,27 +24,27 @@
     {% endif %}
     <main>
       <div class="container-lg mt-3">
-        <h1>Сайт: {{ site.name }}</h1>
+        <h1>Сайт: {{ url.name }}</h1>
         <div class="table-responsive">
           <table data-test="url" class="table table-bordered table-hover text-nowrap">
             <tbody>
             <tr>
               <td>ID</td>
-              <td>{{ site.id }}</td>
+              <td>{{ url.id }}</td>
             </tr>
             <tr>
               <td>Имя</td>
-              <td>{{ site.name }}</td>
+              <td>{{ url.name }}</td>
             </tr>
             <tr>
               <td>Дата создания</td>
-              <td>{{ site.created_at }}</td>
+              <td>{{ url.created_at }}</td>
             </tr>
             </tbody>
           </table>
         </div>
         <h2 class="mt-5 mb-3">Проверки</h2>
-        <form method="post" action="{{ url_for('get_check', id=site.id) }}">
+        <form method="post" action="{{ url_for('run_check', id=url.id) }}">
           <input type="submit" class="btn btn-primary" value="Запустить проверку">
         </form>
         <div>
