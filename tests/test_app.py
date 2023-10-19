@@ -67,7 +67,7 @@ def test_get_main_page(client):
     assert response.status_code == 200
 
 
-def test_check_site(page: Page):
+def test_check_url(page: Page):
     page.goto(f'{URL}/')
     page.get_by_placeholder("https://www.example.com"). \
         fill("")
@@ -104,7 +104,7 @@ def test_get_urls(page: Page):
     expect(page.get_by_role("table", name='')).to_be_visible()
 
 
-def test_get_check(page: Page):
+def test_run_check(page: Page):
     page.goto(f'{URL}/')
     page.get_by_placeholder("https://www.example.com"). \
         fill("https://aaa.ru")
