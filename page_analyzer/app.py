@@ -1,11 +1,14 @@
 import os
+from datetime import date
 
+import requests
 import validators
 from dotenv import load_dotenv
 from flask import (Flask, flash, get_flashed_messages, redirect,
                    render_template, request, url_for)
 
-from .db import (add_url, add_url_check, get_url_checks, get_url_from_db,
+from . import data_handlers, db
+from .db import (add_url, get_url_checks, get_url_from_db,
                  get_urls_list)
 
 load_dotenv()
@@ -31,9 +34,16 @@ def check_url():
             messages = get_flashed_messages(with_categories=True)
             return render_template('main.html', messages=messages), 422
 
-    checking_result = add_url(url)
-    url_id = checking_result['id']
-    flash(checking_result['message'], checking_result['category'])
+    name = data_handlers.extract_name(url)
+    checking_result = db.find_url(name)
+    if not checking_result:
+        current_date = date.today().isoformat()
+        add_url(name, current_date)
+        flash('Страница успешно добавлена', 'success')
+        url_id = db.find_url(name)[0]['id']
+    else:
+        flash('Страница уже существует', 'info')
+        url_id = checking_result[0]['id']
     return redirect(url_for('get_url', id=url_id), code=302)
 
 
@@ -54,6 +64,13 @@ def get_urls():
 
 @app.route('/urls/<int:id>/checks', methods=['POST'])
 def run_check(id):
-    checking_result = add_url_check(id)
-    flash(checking_result['message'], checking_result['category'])
+    site = get_url_from_db(id)
+    try:
+        status_code, title, h1, description = data_handlers.parse_site(site)
+    except requests.exceptions.RequestException:
+        flash('Произошла ошибка при проверке', 'danger')
+    else:
+        current_date = date.today().isoformat()
+        db.add_url_check(id, status_code, h1, title, description, current_date)
+        flash('Страница успешно проверена', 'success')
     return redirect(url_for('get_url', id=id), code=302)
