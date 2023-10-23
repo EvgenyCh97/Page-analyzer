@@ -8,8 +8,8 @@ from dotenv import load_dotenv
 from playwright.sync_api import Page, expect
 
 import page_analyzer
-from page_analyzer.database_handlers import (DATABASE_URL, insert_into_db,
-                                             select_from_db)
+from page_analyzer.db_handlers import (DATABASE_URL, insert_into_db,
+                                       select_from_db)
 
 load_dotenv()
 URL = os.getenv('DEV_URL', 'http://server:8001')

@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 import requests
 from bs4 import BeautifulSoup
 
-from .database_handlers import insert_into_db, select_from_db
+from .db_handlers import insert_into_db, select_from_db
 
 
 def add_url(url):
