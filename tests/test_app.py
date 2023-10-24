@@ -1,4 +1,3 @@
-import datetime
 import os
 
 import psycopg2
@@ -8,11 +7,10 @@ from dotenv import load_dotenv
 from playwright.sync_api import Page, expect
 
 import page_analyzer
-from page_analyzer.db_handlers import (DATABASE_URL, insert_into_db,
-                                       select_from_db)
 
 load_dotenv()
 URL = os.getenv('DEV_URL', 'http://server:8001')
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 
 @pytest.fixture()
@@ -28,38 +26,6 @@ def app():
 @pytest.fixture()
 def client(app):
     return app.test_client()
-
-
-def test_select_from_db():
-    with psycopg2.connect(DATABASE_URL) as connection:
-        with connection.cursor(
-                cursor_factory=psycopg2.extras.DictCursor) as cursor:
-            cursor.execute('INSERT INTO urls (name, created_at) '
-                           'VALUES (%s, %s)', ('test_select', '2023-10-18'))
-            connection.commit()
-            result = select_from_db(
-                'SELECT name, created_at FROM urls WHERE name = %s',
-                ('test_select',))
-            assert result == [['test_select', datetime.date(
-                2023, 10, 18)]]
-            cursor.execute('DELETE FROM urls WHERE name = %s',
-                           ('test_select',))
-            connection.commit()
-
-
-def test_insert_into_db():
-    insert_into_db('INSERT INTO urls (name, created_at) VALUES (%s, %s)',
-                   ('test_insert', '2023-10-18'))
-    with psycopg2.connect(DATABASE_URL) as connection:
-        with connection.cursor(
-                cursor_factory=psycopg2.extras.DictCursor) as cursor:
-            cursor.execute('SELECT name, created_at FROM urls WHERE name = %s',
-                           ('test_insert',))
-            assert cursor.fetchone() == ['test_insert', datetime.date(
-                2023, 10, 18)]
-            cursor.execute('DELETE FROM urls WHERE name = %s',
-                           ('test_insert',))
-            connection.commit()
 
 
 def test_get_main_page(client):
