@@ -63,7 +63,7 @@ def check_url(connection):
 @make_connection(DATABASE_URL)
 def get_url(connection, id):
     messages = get_flashed_messages(with_categories=True)
-    url = db.get_url_from_db(connection, id)
+    url = db.get_url(connection, id)
     checks = db.get_url_checks(connection, id)
     return render_template('show.html', messages=messages, url=url,
                            checks=checks)
@@ -72,14 +72,14 @@ def get_url(connection, id):
 @app.route('/urls')
 @make_connection(DATABASE_URL)
 def get_urls(connection):
-    urls = db.get_urls_list(connection)
+    urls = db.get_urls(connection)
     return render_template('index.html', urls=urls)
 
 
 @app.route('/urls/<int:id>/checks', methods=['POST'])
 @make_connection(DATABASE_URL)
 def run_check(connection, id):
-    url = db.get_url_from_db(connection, id)
+    url = db.get_url(connection, id)
     try:
         status_code, title, h1, description = parser.parse_site(url)
     except requests.exceptions.RequestException:

@@ -17,7 +17,7 @@ def add_url(connection, name, current_date):
         connection.commit()
 
 
-def get_url_from_db(connection, id):
+def get_url(connection, id):
     with connection.cursor(
             cursor_factory=psycopg2.extras.DictCursor) as cursor:
         cursor.execute('SELECT * FROM urls WHERE id = %s', (id,))
@@ -33,7 +33,7 @@ def get_url_checks(connection, id):
         return cursor.fetchall()
 
 
-def get_urls_list(connection):
+def get_urls(connection):
     with connection.cursor(
             cursor_factory=psycopg2.extras.DictCursor) as cursor:
         cursor.execute(
