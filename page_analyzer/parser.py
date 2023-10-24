@@ -8,9 +8,9 @@ def extract_name(url):
     return (urlparse(url)[0] + '://' + urlparse(url)[1]).lower()
 
 
-def parse_site(site):
+def parse_site(url):
     try:
-        r = requests.get(site['name'])
+        r = requests.get(url['name'])
         r.raise_for_status()
     except requests.exceptions.RequestException:
         raise requests.exceptions.RequestException
