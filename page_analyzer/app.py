@@ -44,7 +44,7 @@ def check_url():
     else:
         flash('Страница уже существует', 'info')
         url_id = checking_result['id']
-    db.close_connection(connection)
+    db.close(connection)
     return redirect(url_for('get_url', id=url_id), code=302)
 
 
@@ -54,7 +54,7 @@ def get_url(id):
     connection = db.create_connection(DATABASE_URL)
     url = db.get_url(connection, id)
     checks = db.get_url_checks(connection, id)
-    db.close_connection(connection)
+    db.close(connection)
     return render_template('show.html', messages=messages, url=url,
                            checks=checks)
 
@@ -63,7 +63,7 @@ def get_url(id):
 def get_urls():
     connection = db.create_connection(DATABASE_URL)
     urls = db.get_urls(connection)
-    db.close_connection(connection)
+    db.close(connection)
     return render_template('index.html', urls=urls)
 
 
@@ -80,5 +80,5 @@ def run_check(id):
         db.add_url_check(connection, id, status_code, h1, title, description,
                          current_date)
         flash('Страница успешно проверена', 'success')
-    db.close_connection(connection)
+    db.close(connection)
     return redirect(url_for('get_url', id=id), code=302)

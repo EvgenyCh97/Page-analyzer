@@ -6,7 +6,7 @@ def create_connection(db_url):
     return psycopg2.connect(db_url)
 
 
-def close_connection(connection):
+def close(connection):
     connection.close()
 
 
