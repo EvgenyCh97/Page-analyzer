@@ -34,34 +34,36 @@ def test_get_main_page(client):
 
 
 def test_check_url(page: Page):
-    page.goto(f'{URL}/')
-    page.get_by_placeholder("https://www.example.com"). \
-        fill("")
-    page.locator('input[type="submit"]').click()
-    expect(page.get_by_text("URL обязателен")).to_be_visible()
+    try:
+        page.goto(f'{URL}/')
+        page.get_by_placeholder("https://www.example.com"). \
+            fill("")
+        page.locator('input[type="submit"]').click()
+        expect(page.get_by_text("URL обязателен")).to_be_visible()
 
-    page.get_by_placeholder("https://www.example.com"). \
-        fill("test@")
-    page.locator('input[type="submit"]').click()
-    expect(page.get_by_text("Некорректный URL")).to_be_visible()
+        page.get_by_placeholder("https://www.example.com"). \
+            fill("test@")
+        page.locator('input[type="submit"]').click()
+        expect(page.get_by_text("Некорректный URL")).to_be_visible()
 
-    page.goto(f'{URL}/')
-    page.get_by_placeholder("https://www.example.com"). \
-        fill("https://test.com")
-    page.locator('input[type="submit"]').click()
-    expect(page.get_by_text("Страница успешно добавлена")).to_be_visible()
+        page.goto(f'{URL}/')
+        page.get_by_placeholder("https://www.example.com"). \
+            fill("https://test.com")
+        page.locator('input[type="submit"]').click()
+        expect(page.get_by_text("Страница успешно добавлена")).to_be_visible()
 
-    page.goto(f'{URL}/')
-    page.get_by_placeholder("https://www.example.com"). \
-        fill("https://TEST.com")
-    page.locator('input[type="submit"]').click()
-    expect(page.get_by_text("Страница уже существует")).to_be_visible()
+        page.goto(f'{URL}/')
+        page.get_by_placeholder("https://www.example.com"). \
+            fill("https://TEST.com")
+        page.locator('input[type="submit"]').click()
+        expect(page.get_by_text("Страница уже существует")).to_be_visible()
 
-    with psycopg2.connect(DATABASE_URL) as connection:
-        with connection.cursor(
-                cursor_factory=psycopg2.extras.DictCursor) as cursor:
-            cursor.execute('DELETE FROM urls WHERE name = %s',
-                           ('https://test.com',))
+    finally:
+        with psycopg2.connect(DATABASE_URL) as connection:
+            with connection.cursor(
+                    cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                cursor.execute('DELETE FROM urls WHERE name = %s',
+                               ('https://test.com',))
 
 
 def test_get_urls(page: Page):
@@ -71,24 +73,27 @@ def test_get_urls(page: Page):
 
 
 def test_run_check(page: Page):
-    page.goto(f'{URL}/')
-    page.get_by_placeholder("https://www.example.com"). \
-        fill("https://aaa.ru")
-    page.locator('input[type="submit"]').click()
-    page.locator('text=Запустить проверку').click()
-    expect(page.get_by_text("Страница успешно проверена")).to_be_visible()
+    try:
+        page.goto(f'{URL}/')
+        page.get_by_placeholder("https://www.example.com"). \
+            fill("https://aaa.ru")
+        page.locator('input[type="submit"]').click()
+        page.locator('text=Запустить проверку').click()
+        expect(page.get_by_text("Страница успешно проверена")).to_be_visible()
 
-    page.goto(f'{URL}/')
-    page.get_by_placeholder("https://www.example.com"). \
-        fill("https://ccc.com")
-    page.locator('input[type="submit"]').click()
-    page.locator('text=Запустить проверку').click()
-    expect(page.get_by_text("Произошла ошибка при проверке")).to_be_visible()
+        page.goto(f'{URL}/')
+        page.get_by_placeholder("https://www.example.com"). \
+            fill("https://ccc.com")
+        page.locator('input[type="submit"]').click()
+        page.locator('text=Запустить проверку').click()
+        expect(
+            page.get_by_text("Произошла ошибка при проверке")).to_be_visible()
 
-    with psycopg2.connect(DATABASE_URL) as connection:
-        with connection.cursor(
-                cursor_factory=psycopg2.extras.DictCursor) as cursor:
-            cursor.execute('DELETE FROM urls WHERE name = %s',
-                           ('https://aaa.ru',))
-            cursor.execute('DELETE FROM urls WHERE name = %s',
-                           ('https://ccc.com',))
+    finally:
+        with psycopg2.connect(DATABASE_URL) as connection:
+            with connection.cursor(
+                    cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                cursor.execute('DELETE FROM urls WHERE name = %s',
+                               ('https://aaa.ru',))
+                cursor.execute('DELETE FROM urls WHERE name = %s',
+                               ('https://ccc.com',))
