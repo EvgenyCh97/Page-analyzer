@@ -47,14 +47,14 @@ def get_url_checks(connection, id):
 def get_urls(connection):
     with connection.cursor(
             cursor_factory=psycopg2.extras.NamedTupleCursor) as cursor:
+        cursor.execute('SELECT * FROM urls ORDER BY id DESC')
+        urls = cursor.fetchall()
         cursor.execute(
-            '''SELECT DISTINCT ON (urls.id) urls.id, name,
-            url_checks.created_at, url_checks.status_code
-            FROM urls
-            LEFT JOIN url_checks ON urls.id = url_checks.url_id
-            ORDER BY urls.id DESC, url_checks.id DESC;''')
+            '''SELECT DISTINCT ON (url_id) id, url_id, status_code
+            FROM url_checks ORDER BY url_id DESC, id DESC''')
+        checks = cursor.fetchall()
         connection.commit()
-        return cursor.fetchall()
+        return urls, checks
 
 
 def add_url_check(connection, id, status_code, h1, title, description,

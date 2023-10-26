@@ -1,5 +1,6 @@
 import os
 from datetime import date
+from collections import namedtuple
 
 import requests
 import validators
@@ -62,9 +63,16 @@ def get_url(id):
 @app.route('/urls')
 def get_urls():
     connection = db.create_connection(DATABASE_URL)
-    urls = db.get_urls(connection)
+    result = []
+    urls, checks = db.get_urls(connection)
+    checks = [check.status_code for check in checks]
+    Record = namedtuple('Record', ['id', 'name', 'created_at', 'status_code'])
+    for i in range(0, len(urls)):
+        url = urls[i]
+        url_info = Record(url.id, url.name, url.created_at, checks[i])
+        result.append(url_info)
     db.close(connection)
-    return render_template('index.html', urls=urls)
+    return render_template('index.html', urls=result)
 
 
 @app.route('/urls/<int:id>/checks', methods=['POST'])
