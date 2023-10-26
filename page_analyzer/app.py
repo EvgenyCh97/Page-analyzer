@@ -1,8 +1,6 @@
 import os
 from datetime import date
 
-import psycopg2
-import psycopg2.extras
 import requests
 import validators
 from dotenv import load_dotenv
@@ -18,16 +16,6 @@ app.secret_key = os.getenv('SECRET_KEY')
 DATABASE_URL = os.getenv('DATABASE_URL')
 
 
-def make_connection(database_url):
-    def wrapper(func):
-        def inner(*args, **kwargs):
-            with psycopg2.connect(database_url) as connection:
-                return func(connection, *args, **kwargs)
-        inner.__name__ = func.__name__
-        return inner
-    return wrapper
-
-
 @app.route('/')
 def get_main_page():
     messages = get_flashed_messages(with_categories=True)
@@ -35,8 +23,7 @@ def get_main_page():
 
 
 @app.route('/urls', methods=['POST'])
-@make_connection(DATABASE_URL)
-def check_url(connection):
+def check_url():
     url = request.form.get('url')
 
     for pass_check, message in ((url, 'URL обязателен'),
@@ -46,6 +33,7 @@ def check_url(connection):
             messages = get_flashed_messages(with_categories=True)
             return render_template('main.html', messages=messages), 422
 
+    connection = db.create_connection(DATABASE_URL)
     name = parser.extract_name(url)
     checking_result = db.get_url_by_name(connection, name)
     if not checking_result:
@@ -56,29 +44,32 @@ def check_url(connection):
     else:
         flash('Страница уже существует', 'info')
         url_id = checking_result['id']
+    db.close_connection(connection)
     return redirect(url_for('get_url', id=url_id), code=302)
 
 
 @app.route('/urls/<int:id>')
-@make_connection(DATABASE_URL)
-def get_url(connection, id):
+def get_url(id):
     messages = get_flashed_messages(with_categories=True)
+    connection = db.create_connection(DATABASE_URL)
     url = db.get_url(connection, id)
     checks = db.get_url_checks(connection, id)
+    db.close_connection(connection)
     return render_template('show.html', messages=messages, url=url,
                            checks=checks)
 
 
 @app.route('/urls')
-@make_connection(DATABASE_URL)
-def get_urls(connection):
+def get_urls():
+    connection = db.create_connection(DATABASE_URL)
     urls = db.get_urls(connection)
+    db.close_connection(connection)
     return render_template('index.html', urls=urls)
 
 
 @app.route('/urls/<int:id>/checks', methods=['POST'])
-@make_connection(DATABASE_URL)
-def run_check(connection, id):
+def run_check(id):
+    connection = db.create_connection(DATABASE_URL)
     url = db.get_url(connection, id)
     try:
         status_code, title, h1, description = parser.parse_site(url)
@@ -89,4 +80,5 @@ def run_check(connection, id):
         db.add_url_check(connection, id, status_code, h1, title, description,
                          current_date)
         flash('Страница успешно проверена', 'success')
+    db.close_connection(connection)
     return redirect(url_for('get_url', id=id), code=302)

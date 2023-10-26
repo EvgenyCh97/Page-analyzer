@@ -2,6 +2,14 @@ import psycopg2
 import psycopg2.extras
 
 
+def create_connection(db_url):
+    return psycopg2.connect(db_url)
+
+
+def close_connection(connection):
+    connection.close()
+
+
 def get_url_by_name(connection, name):
     with connection.cursor(
             cursor_factory=psycopg2.extras.DictCursor) as cursor:
