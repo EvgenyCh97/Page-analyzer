@@ -14,6 +14,7 @@ def get_url_by_name(connection, name):
     with connection.cursor(
             cursor_factory=psycopg2.extras.NamedTupleCursor) as cursor:
         cursor.execute('SELECT * FROM urls WHERE name = %s', (name,))
+        connection.commit()
         return cursor.fetchone()
 
 
@@ -29,6 +30,7 @@ def get_url(connection, id):
     with connection.cursor(
             cursor_factory=psycopg2.extras.NamedTupleCursor) as cursor:
         cursor.execute('SELECT * FROM urls WHERE id = %s', (id,))
+        connection.commit()
         return cursor.fetchone()
 
 
@@ -38,6 +40,7 @@ def get_url_checks(connection, id):
         cursor.execute(
             'SELECT * FROM url_checks WHERE url_id = %s ORDER BY id DESC',
             (id,))
+        connection.commit()
         return cursor.fetchall()
 
 
@@ -50,6 +53,7 @@ def get_urls(connection):
             FROM urls
             LEFT JOIN url_checks ON urls.id = url_checks.url_id
             ORDER BY urls.id DESC, url_checks.id DESC;''')
+        connection.commit()
         return cursor.fetchall()
 
 
