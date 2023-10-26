@@ -34,14 +34,14 @@ def check_url():
 
     connection = db.create_connection(DATABASE_URL)
     name = parser.extract_name(url)
-    checking_result = db.get_url_by_name(connection, name)
-    if not checking_result:
+    target_url = db.get_url_by_name(connection, name)
+    if not target_url:
         db.add_url(connection, name)
         flash('Страница успешно добавлена', 'success')
         url_id = db.get_url_by_name(connection, name).id
     else:
         flash('Страница уже существует', 'info')
-        url_id = checking_result.id
+        url_id = target_url.id
     db.close(connection)
     return redirect(url_for('get_url', id=url_id), code=302)
 
