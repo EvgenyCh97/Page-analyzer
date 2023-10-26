@@ -21,9 +21,10 @@ def get_url_by_name(connection, name):
 def add_url(connection, name):
     with connection.cursor(
             cursor_factory=psycopg2.extras.NamedTupleCursor) as cursor:
-        cursor.execute('INSERT INTO urls (name) VALUES (%s)',
+        cursor.execute('INSERT INTO urls (name) VALUES (%s) RETURNING id',
                        (name,))
         connection.commit()
+        return cursor.fetchone()
 
 
 def get_url(connection, id):

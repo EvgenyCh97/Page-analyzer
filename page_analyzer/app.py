@@ -36,9 +36,8 @@ def check_url():
     name = parser.extract_name(url)
     target_url = db.get_url_by_name(connection, name)
     if not target_url:
-        db.add_url(connection, name)
+        url_id = db.add_url(connection, name).id
         flash('Страница успешно добавлена', 'success')
-        url_id = db.get_url_by_name(connection, name).id
     else:
         flash('Страница уже существует', 'info')
         url_id = target_url.id
