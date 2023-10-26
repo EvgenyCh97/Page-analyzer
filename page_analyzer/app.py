@@ -40,10 +40,10 @@ def check_url():
         current_date = date.today().isoformat()
         db.add_url(connection, name, current_date)
         flash('Страница успешно добавлена', 'success')
-        url_id = db.get_url_by_name(connection, name)['id']
+        url_id = db.get_url_by_name(connection, name).id
     else:
         flash('Страница уже существует', 'info')
-        url_id = checking_result['id']
+        url_id = checking_result.id
     db.close(connection)
     return redirect(url_for('get_url', id=url_id), code=302)
 

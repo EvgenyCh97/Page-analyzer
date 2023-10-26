@@ -10,7 +10,7 @@ def extract_name(url):
 
 def parse_site(url):
     try:
-        r = requests.get(url['name'])
+        r = requests.get(url.name)
         r.raise_for_status()
     except requests.exceptions.RequestException:
         raise requests.exceptions.RequestException
