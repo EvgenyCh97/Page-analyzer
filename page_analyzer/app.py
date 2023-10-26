@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from flask import (Flask, flash, get_flashed_messages, redirect,
                    render_template, request, url_for)
 
-from . import db, parser
+from . import db, parser, validator
 
 load_dotenv()
 
@@ -26,12 +26,12 @@ def get_main_page():
 def check_url():
     url = request.form.get('url')
 
-    for pass_check, message in ((url, 'URL обязателен'),
-                                (validators.url(url), 'Некорректный URL')):
-        if not pass_check:
-            flash(message, 'danger')
-            messages = get_flashed_messages(with_categories=True)
-            return render_template('main.html', messages=messages), 422
+    errors = validator.validate_url(url)
+    if errors:
+        error_message, category = errors
+        flash(error_message, category)
+        messages = get_flashed_messages(with_categories=True)
+        return render_template('main.html', messages=messages), 422
 
     connection = db.create_connection(DATABASE_URL)
     name = parser.extract_name(url)
