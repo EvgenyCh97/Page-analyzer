@@ -1,9 +1,7 @@
 import os
-from datetime import date
 from collections import namedtuple
 
 import requests
-import validators
 from dotenv import load_dotenv
 from flask import (Flask, flash, get_flashed_messages, redirect,
                    render_template, request, url_for)
@@ -38,8 +36,7 @@ def check_url():
     name = parser.extract_name(url)
     checking_result = db.get_url_by_name(connection, name)
     if not checking_result:
-        current_date = date.today().isoformat()
-        db.add_url(connection, name, current_date)
+        db.add_url(connection, name)
         flash('Страница успешно добавлена', 'success')
         url_id = db.get_url_by_name(connection, name).id
     else:
@@ -65,12 +62,15 @@ def get_urls():
     connection = db.create_connection(DATABASE_URL)
     result = []
     urls, checks = db.get_urls(connection)
-    checks = [check.status_code for check in checks]
-    Record = namedtuple('Record', ['id', 'name', 'created_at', 'status_code'])
-    for i in range(0, len(urls)):
-        url = urls[i]
-        url_info = Record(url.id, url.name, url.created_at, checks[i])
-        result.append(url_info)
+    if urls:
+        checks = [check.status_code for check in checks]
+        Record = namedtuple('Record',
+                            ['id', 'name', 'created_at', 'status_code'])
+        for i in range(0, len(urls)):
+            url = urls[i]
+            url_info = Record(url.id, url.name, url.created_at,
+                              checks[i] if checks else None)
+            result.append(url_info)
     db.close(connection)
     return render_template('index.html', urls=result)
 
@@ -84,7 +84,6 @@ def run_check(id):
     except requests.exceptions.RequestException:
         flash('Произошла ошибка при проверке', 'danger')
     else:
-        current_date = date.today().isoformat()
         db.add_url_check(connection, id, page_data)
         flash('Страница успешно проверена', 'success')
     db.close(connection)

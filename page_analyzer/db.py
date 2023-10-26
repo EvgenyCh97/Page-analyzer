@@ -18,11 +18,11 @@ def get_url_by_name(connection, name):
         return cursor.fetchone()
 
 
-def add_url(connection, name, current_date):
+def add_url(connection, name):
     with connection.cursor(
             cursor_factory=psycopg2.extras.NamedTupleCursor) as cursor:
-        cursor.execute('INSERT INTO urls (name, created_at) VALUES (%s, %s)',
-                       (name, current_date))
+        cursor.execute('INSERT INTO urls (name) VALUES (%s)',
+                       (name,))
         connection.commit()
 
 
@@ -66,11 +66,10 @@ def add_url_check(connection, id, page_data):
             cursor_factory=psycopg2.extras.NamedTupleCursor) as cursor:
         cursor.execute(
             '''INSERT INTO url_checks (url_id, status_code, h1,
-            title, description, created_at)
-            VALUES (%s, %s, %s, %s, %s, %s)''',
-            (page_data[id], status_code,
+            title, description)
+            VALUES (%s, %s, %s, %s, %s)''',
+            (id, status_code,
              h1.string if h1 else None,
              title.string if title else None,
-             description['content'] if description else None,
-             page_data['current_date']))
+             description['content'] if description else None))
         connection.commit()
