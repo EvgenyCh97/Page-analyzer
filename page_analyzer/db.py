@@ -68,8 +68,8 @@ def add_url_check(connection, id, page_data):
             '''INSERT INTO url_checks (url_id, status_code, h1,
             title, description)
             VALUES (%s, %s, %s, %s, %s)''',
-            (id, status_code,
-             h1.string if h1 else None,
-             title.string if title else None,
-             description['content'] if description else None))
+            (str(id), str(status_code),
+             str(h1.string) if h1 else None,
+             str(title.string) if title else None,
+             str(description['content']) if description else None))
         connection.commit()
