@@ -2,7 +2,7 @@ import psycopg2
 import psycopg2.extras
 
 
-def find_url(connection, name):
+def get_url_by_name(connection, name):
     with connection.cursor(
             cursor_factory=psycopg2.extras.DictCursor) as cursor:
         cursor.execute('SELECT * FROM urls WHERE name = %s', (name,))

@@ -47,12 +47,12 @@ def check_url(connection):
             return render_template('main.html', messages=messages), 422
 
     name = parser.extract_name(url)
-    checking_result = db.find_url(connection, name)
+    checking_result = db.get_url_by_name(connection, name)
     if not checking_result:
         current_date = date.today().isoformat()
         db.add_url(connection, name, current_date)
         flash('Страница успешно добавлена', 'success')
-        url_id = db.find_url(connection, name)['id']
+        url_id = db.get_url_by_name(connection, name)['id']
     else:
         flash('Страница уже существует', 'info')
         url_id = checking_result['id']
