@@ -80,13 +80,12 @@ def run_check(id):
     connection = db.create_connection(DATABASE_URL)
     url = db.get_url(connection, id)
     try:
-        status_code, title, h1, description = parser.parse_site(url)
+        page_data = parser.parse_site(url)
     except requests.exceptions.RequestException:
         flash('Произошла ошибка при проверке', 'danger')
     else:
         current_date = date.today().isoformat()
-        db.add_url_check(connection, id, status_code, h1, title, description,
-                         current_date)
+        db.add_url_check(connection, id, page_data)
         flash('Страница успешно проверена', 'success')
     db.close(connection)
     return redirect(url_for('get_url', id=id), code=302)

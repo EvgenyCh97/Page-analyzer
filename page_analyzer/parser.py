@@ -9,15 +9,16 @@ def extract_name(url):
 
 
 def parse_site(url):
+    page_data = {}
     try:
         r = requests.get(url.name)
         r.raise_for_status()
     except requests.exceptions.RequestException:
         raise requests.exceptions.RequestException
     else:
-        status_code = r.status_code
         soup = BeautifulSoup(r.text, 'html.parser')
-        title = soup.select_one('title')
-        h1 = soup.select_one('h1')
-        description = soup.select_one('meta[name="description"]')
-    return status_code, title, h1, description
+        page_data['status_code'] = r.status_code
+        page_data['title'] = soup.select_one('title')
+        page_data['h1'] = soup.select_one('h1')
+        page_data['description'] = soup.select_one('meta[name="description"]')
+    return page_data
