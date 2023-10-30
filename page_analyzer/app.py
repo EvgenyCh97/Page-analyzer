@@ -25,9 +25,9 @@ def get_main_page():
 def check_url():
     url = request.form.get('url')
 
-    errors = validator.validate_url(url)
-    if errors:
-        error_message, category = errors
+    error = validator.validate_url(url)
+    if error:
+        error_message, category = error
         flash(error_message, category)
         messages = get_flashed_messages(with_categories=True)
         return render_template('main.html', messages=messages), 422
