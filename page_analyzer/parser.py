@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 def extract_name(url):
     parsing_result = urlparse(url)
-    return (parsing_result[0] + '://' + parsing_result[1]).lower()
+    return f'{parsing_result[0]}://{parsing_result[1]}'.lower()
 
 
 def parse_site(url):
