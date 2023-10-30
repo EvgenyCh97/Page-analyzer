@@ -84,7 +84,7 @@ def add_url_check(connection, id, page_data):
             title, description)
             VALUES (%s, %s, %s, %s, %s)''',
             (str(id), str(status_code),
-             str(h1.string) if h1 else None,
-             str(title.string) if title else None,
+             str(h1.string)[:253] if h1 else None,
+             str(title.string)[:253] if title else None,
              str(description['content']) if description else None))
         connection.commit()
