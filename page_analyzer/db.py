@@ -24,7 +24,7 @@ def add_url(connection, name):
         cursor.execute('INSERT INTO urls (name) VALUES (%s) RETURNING id',
                        (name,))
         connection.commit()
-        return cursor.fetchone()
+        return cursor.fetchone().id
 
 
 def get_url(connection, id):
