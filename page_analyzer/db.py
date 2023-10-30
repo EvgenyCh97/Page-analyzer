@@ -53,19 +53,21 @@ def get_urls(connection):
         cursor.execute('SELECT * FROM urls ORDER BY id DESC')
         urls = cursor.fetchall()
         cursor.execute(
-            '''SELECT DISTINCT ON (url_id) id, url_id, status_code
+            '''SELECT DISTINCT ON (url_id) id, url_id, status_code, created_at
             FROM url_checks ORDER BY url_id DESC, id DESC''')
         checks = cursor.fetchall()
         connection.commit()
         result = []
         if urls:
-            checks = [check.status_code for check in checks]
+            checks = {check.url_id: check for check in checks}
             Record = namedtuple('Record',
                                 ['id', 'name', 'created_at', 'status_code'])
             for i in range(0, len(urls)):
                 url = urls[i]
-                url_info = Record(url.id, url.name, url.created_at,
-                                  checks[i] if checks else None)
+                check = checks.get(url.id, None)
+                url_info = Record(url.id, url.name,
+                                  check.created_at if check else None,
+                                  check.status_code if check else None)
                 result.append(url_info)
         return result
 
