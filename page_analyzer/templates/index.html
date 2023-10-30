@@ -2,28 +2,19 @@
 
 {% block content %}
 
+<h1></h1>
 <div class="container-lg mt-3">
-  <h1>Сайты</h1>
-  <div class="table-responsive">
-    <table data-test="urls" class="align-middle text-center table table-bordered table-hover text-nowrap">
-      <thead>
-        <th>ID</th>
-        <th>Имя</th>
-        <th>Последняя проверка</th>
-        <th>Код ответа</th>
-      </thead>
-      <tbody>
-      {% for url in urls %}
-        <tr>
-          <td>{{ url.id }}</td>
-          <td><a href="{{ url_for('get_url', id=url.id) }}">{{ url.name }}</a></td>
-          <td>{% if url.created_at %}{{ url.created_at }}{% endif %}</td>
-          <td>{% if url.status_code %}{{ url.status_code }}{% endif %}</td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
+  <div class="row">
+    <div class="col-12 col-md-10 col-lg-8 mx-auto border rounded-3 bg-light p-5" style="background-color: #dee2e6">
+      <h1 class="display-3 text-center">Анализатор страниц</h1>
+      <p class="lead text-center">Бесплатно проверяйте сайты на SEO-пригодность</p>
+      <form action="{{ url_for('check_url') }}" class="d-flex justify-content-center" method="post">
+        <input type="text" class="form-control form-control-lg " name="url" placeholder="https://www.example.com">
+        <input type="submit" class="btn btn-primary  btn-lg ms-3 px-5 text-uppercase mx-3" style="background-color: #0d6efd" value="ПРОВЕРИТЬ">
+      </form>
+    </div>
   </div>
 </div>
-      
-{% endblock %}      
+
+{% endblock %}
+        

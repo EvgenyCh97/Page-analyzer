@@ -18,7 +18,7 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 @app.route('/')
 def get_main_page():
     messages = get_flashed_messages(with_categories=True)
-    return render_template('main.html', messages=messages)
+    return render_template('index.html', messages=messages)
 
 
 @app.route('/urls', methods=['POST'])
@@ -30,7 +30,7 @@ def check_url():
         error_message, category = error
         flash(error_message, category)
         messages = get_flashed_messages(with_categories=True)
-        return render_template('main.html', messages=messages), 422
+        return render_template('index.html', messages=messages), 422
 
     connection = db.create_connection(DATABASE_URL)
     name = parser.extract_name(url)
@@ -52,7 +52,7 @@ def get_url(id):
     url = db.get_url(connection, id)
     checks = db.get_url_checks(connection, id)
     db.close(connection)
-    return render_template('show.html', messages=messages, url=url,
+    return render_template('url.html', messages=messages, url=url,
                            checks=checks)
 
 
@@ -71,7 +71,7 @@ def get_urls():
                               checks[i] if checks else None)
             result.append(url_info)
     db.close(connection)
-    return render_template('index.html', urls=result)
+    return render_template('urls.html', urls=result)
 
 
 @app.route('/urls/<int:id>/checks', methods=['POST'])

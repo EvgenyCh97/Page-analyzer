@@ -1,0 +1,29 @@
+{% extends 'layouts/layout.html' %}
+
+{% block content %}
+
+<div class="container-lg mt-3">
+  <h1>Сайты</h1>
+  <div class="table-responsive">
+    <table data-test="urls" class="align-middle text-center table table-bordered table-hover text-nowrap">
+      <thead>
+        <th>ID</th>
+        <th>Имя</th>
+        <th>Последняя проверка</th>
+        <th>Код ответа</th>
+      </thead>
+      <tbody>
+      {% for url in urls %}
+        <tr>
+          <td>{{ url.id }}</td>
+          <td><a href="{{ url_for('get_url', id=url.id) }}">{{ url.name }}</a></td>
+          <td>{% if url.created_at %}{{ url.created_at }}{% endif %}</td>
+          <td>{% if url.status_code %}{{ url.status_code }}{% endif %}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+      
+{% endblock %}      
