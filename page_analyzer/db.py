@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 import psycopg2
 import psycopg2.extras
 
@@ -55,7 +57,17 @@ def get_urls(connection):
             FROM url_checks ORDER BY url_id DESC, id DESC''')
         checks = cursor.fetchall()
         connection.commit()
-        return urls, checks
+        result = []
+        if urls:
+            checks = [check.status_code for check in checks]
+            Record = namedtuple('Record',
+                                ['id', 'name', 'created_at', 'status_code'])
+            for i in range(0, len(urls)):
+                url = urls[i]
+                url_info = Record(url.id, url.name, url.created_at,
+                                  checks[i] if checks else None)
+                result.append(url_info)
+        return result
 
 
 def add_url_check(connection, id, page_data):
