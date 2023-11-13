@@ -74,16 +74,16 @@ def get_urls(connection):
 
 def add_url_check(connection, id, page_data):
     status_code = page_data['status_code']
-    h1 = page_data['h1']
-    title = page_data['title']
-    description = page_data['description']
+    h1 = page_data.get('h1')
+    title = page_data.get('title')
+    description = page_data.get('description')
     with connection.cursor(
             cursor_factory=psycopg2.extras.NamedTupleCursor) as cursor:
         cursor.execute(
             '''INSERT INTO url_checks (url_id, status_code, h1,
             title, description)
             VALUES (%s, %s, %s, %s, %s)''',
-            (str(id), str(status_code),
+            (id, status_code,
              str(h1.string)[:253] if h1 else None,
              str(title.string)[:253] if title else None,
              str(description['content']) if description else None))

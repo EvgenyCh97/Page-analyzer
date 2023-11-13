@@ -13,9 +13,8 @@ def parse_site(url):
     page_data = {}
     try:
         r = requests.get(url.name)
-        r.raise_for_status()
     except requests.exceptions.RequestException:
-        raise requests.exceptions.RequestException
+        return page_data
     else:
         soup = BeautifulSoup(r.text, 'html.parser')
         page_data['status_code'] = r.status_code

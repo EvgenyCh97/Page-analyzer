@@ -1,11 +1,11 @@
 import os
 
-import requests
 from dotenv import load_dotenv
 from flask import (Flask, flash, get_flashed_messages, redirect,
                    render_template, request, url_for)
+from werkzeug.exceptions import HTTPException, NotFound
 
-from . import db, parser, validator
+from . import db, parser, translator, validator
 
 load_dotenv()
 
@@ -49,6 +49,8 @@ def get_url(id):
     messages = get_flashed_messages(with_categories=True)
     connection = db.create_connection(DATABASE_URL)
     url = db.get_url(connection, id)
+    if not url:
+        raise NotFound()
     checks = db.get_url_checks(connection, id)
     db.close(connection)
     return render_template('url.html', messages=messages, url=url,
@@ -67,12 +69,23 @@ def get_urls():
 def run_check(id):
     connection = db.create_connection(DATABASE_URL)
     url = db.get_url(connection, id)
-    try:
-        page_data = parser.parse_site(url)
-    except requests.exceptions.RequestException:
+    page_data = parser.parse_site(url)
+    if not page_data:
         flash('Произошла ошибка при проверке', 'danger')
     else:
         db.add_url_check(connection, id, page_data)
         flash('Страница успешно проверена', 'success')
     db.close(connection)
     return redirect(url_for('get_url', id=id), code=302)
+
+
+@app.errorhandler(Exception)
+def handle_exception(exception):
+    if isinstance(exception, HTTPException):
+        code = exception.code
+        return render_template(
+            "errors/error.html",
+            code=code,
+            description=translator.translate(exception.description)), code
+    return render_template("errors/error.html",
+                           description=translator.translate(exception)), 500
