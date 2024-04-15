@@ -2,7 +2,7 @@
 
 ### [Visit the site](https://page-analyzer-erky.onrender.com)
 
-### Hexlet tests and linter status:
+### Tests and linter status:
 [![Actions Status](https://github.com/EvgenyCh97/python-project-83/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/EvgenyCh97/python-project-83/actions)
 [![Maintainability](https://api.codeclimate.com/v1/badges/7d2ff2dc13d0ff6c0ded/maintainability)](https://codeclimate.com/github/EvgenyCh97/python-project-83/maintainability)
 
